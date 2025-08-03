@@ -3,6 +3,7 @@ import Footer from './components/Footer';
 import Timer from './components/Timer';
 import Dashboard from './components/Dashboard';
 import About from "./components/About";
+import { Analytics } from "@vercel/analytics/react"
 
 export default function App() {
   return (
@@ -14,7 +15,7 @@ export default function App() {
         <Dashboard />
         <About />
       </main>
-
+      <Analytics/>
       <Footer />
     </div>
   );
