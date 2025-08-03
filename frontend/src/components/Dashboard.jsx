@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { getTodayDate } from "../utils/time";
+import SessionNotes from "./SessionNotes";
+import { exportNotesAsJSON } from "../utils/storage";
 import {
   getTodayTotal,
   getAllLogs,
@@ -7,12 +9,25 @@ import {
   getDailyGoal,
   setDailyGoal,
   exportLogsAsJSON,
-  exportLogsAsCSV
+  exportLogsAsCSV,
+  getTotalInRange,
 } from "../utils/storage";
 import { motivationalQuotes } from "../utils/quotes";
 import { motion } from "framer-motion";
 import StreakChart from "./StreakChart";
 import { isWithinInterval, subDays, parseISO } from "date-fns";
+import BadgesPanel from "./BadgesPanel";
+import {
+  Quote,
+  Flame,
+  CalendarDays,
+  CalendarCheck,
+  Timer,
+  Target,
+  BarChart3,
+  Trash2,
+  FileDown,
+} from "lucide-react";
 
 export default function Dashboard() {
   const [todayTotal, setTodayTotal] = useState(0);
@@ -21,6 +36,8 @@ export default function Dashboard() {
   const [dailyGoal, setGoal] = useState(getDailyGoal());
   const [goalMessage, setGoalMessage] = useState("");
   const [filter, setFilter] = useState("all");
+  const [weeklyTotal, setWeeklyTotal] = useState(0);
+  const [monthlyTotal, setMonthlyTotal] = useState(0);
 
   const progressPercent =
     dailyGoal > 0 ? Math.min((todayTotal / dailyGoal) * 100, 100) : 0;
@@ -34,6 +51,8 @@ export default function Dashboard() {
     setTodayTotal(getTodayTotal(date));
     setLogs(logsData);
     setStreak(calculateStreak(logsData));
+    setWeeklyTotal(getTotalInRange(logsData, 7));
+    setMonthlyTotal(getTotalInRange(logsData, 30));
   }, []);
 
   const handleGoalUpdate = (e) => {
@@ -42,7 +61,7 @@ export default function Dashboard() {
     if (!isNaN(newGoal) && newGoal > 0) {
       setDailyGoal(newGoal);
       setGoal(newGoal);
-      setGoalMessage("✅ Goal updated!");
+      setGoalMessage("Goal updated!");
       window.scrollTo({ top: 0, behavior: "smooth" });
       setTimeout(() => setGoalMessage(""), 2000);
     }
@@ -50,7 +69,6 @@ export default function Dashboard() {
 
   const filterLogsByDateRange = (logs, filter) => {
     if (filter === "all") return logs;
-
     const now = new Date();
     const days = filter === "week" ? 6 : 29;
 
@@ -66,48 +84,86 @@ export default function Dashboard() {
 
   const filteredLogs = filterLogsByDateRange(logs, filter);
 
-  return (
-    <div className="w-full max-w-xl mt-10">
+  const glow = "hover:shadow-[0_0_0_2px_var(--chrono-primary)] hover:shadow-[0_0_12px_2px_var(--chrono-primary)] transition duration-300";
 
-      {/* 💭 Motivational Quote */}
+  return (
+    <div className="w-full max-w-4xl mx-auto mt-10 px-4">
+      {/* Motivation */}
       <motion.div
-        className="bg-white rounded shadow p-4 mb-6"
+        className={`bg-[#fff6e6] rounded-xl shadow-md p-5 border border-[var(--chrono-primary)] mb-6 ${glow}`}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h3 className="text-md font-bold mb-2 text-gray-600">💭 Daily Motivation</h3>
-        <blockquote className="italic text-gray-700">
+        <div className="flex items-center gap-2 mb-2 text-[var(--chrono-secondary)]">
+          <Quote size={18} />
+          <h3 className="text-md font-bold">Daily Motivation</h3>
+        </div>
+        <blockquote className="italic text-[var(--chrono-secondary)] leading-relaxed">
           “{quoteOfTheDay.text}”
-          <footer className="mt-1 text-right text-sm text-gray-500">
+          <footer className="mt-2 text-right text-sm text-gray-600">
             — {quoteOfTheDay.author}
           </footer>
         </blockquote>
       </motion.div>
 
-      {/* 🔥 Streak Counter */}
+<SessionNotes />
+
+      {/* Streak */}
       <motion.div
-        className="text-center mb-6"
+        className={`bg-[#fffdf7] rounded-xl shadow-md p-5 border border-neutral-200 text-center mb-6 ${glow}`}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h3 className="text-2xl font-bold text-[var(--chrono-primary)]">
-          🔥 {streak} day{streak === 1 ? "" : "s"} streak!
-        </h3>
+        <div className="flex justify-center items-center gap-2 mb-1">
+          <Flame className="text-[var(--chrono-primary)]" />
+          <h3 className="text-2xl font-bold text-[var(--chrono-primary)]">
+            {streak} day{streak === 1 ? "" : "s"} streak!
+          </h3>
+        </div>
         <p className="text-sm text-gray-600">Keep the momentum going!</p>
       </motion.div>
 
-      {/* 🟢 Today's Total */}
-      <div className="bg-white rounded shadow p-4 mb-6">
-        <p className="text-lg font-medium">
-          Today: <span className="text-[var(--chrono-primary)]">{todayTotal} minutes</span>
-        </p>
+      {/* Weekly / Monthly Summary */}
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className={`bg-[#fff7ea] rounded-xl shadow-md p-5 border border-neutral-200 ${glow}`}>
+          <div className="flex items-center gap-2 text-sm font-semibold text-gray-600 mb-1">
+            <CalendarDays size={16} />
+            <span>This Week</span>
+          </div>
+          <p className="text-xl font-bold text-[var(--chrono-primary)]">
+            {weeklyTotal} mins
+          </p>
+        </div>
+        <div className={`bg-[#fff7ea] rounded-xl shadow-md p-5 border border-neutral-200 ${glow}`}>
+          <div className="flex items-center gap-2 text-sm font-semibold text-gray-600 mb-1">
+            <CalendarCheck size={16} />
+            <span>This Month</span>
+          </div>
+          <p className="text-xl font-bold text-[var(--chrono-primary)]">
+            {monthlyTotal} mins
+          </p>
+        </div>
       </div>
 
-      {/* 🎯 Daily Goal Progress */}
-      <div className="bg-white rounded shadow p-4 mb-6">
-        <h3 className="text-md font-bold mb-2 text-gray-600">🎯 Daily Goal Progress</h3>
+      {/* Today's Total */}
+      <div className={`bg-[#fffbe9] rounded-xl shadow-md p-5 border border-neutral-200 mb-6 ${glow}`}>
+        <div className="flex items-center gap-2 text-lg font-medium mb-1">
+          <Timer size={18} />
+          <span>
+            Today:{" "}
+            <span className="text-[var(--chrono-primary)]">{todayTotal} minutes</span>
+          </span>
+        </div>
+      </div>
+
+      {/* Daily Goal */}
+      <div className={`bg-[#fff8e5] rounded-xl shadow-md p-5 border border-neutral-200 mb-6 ${glow}`}>
+        <div className="flex items-center gap-2 text-md font-bold text-gray-600 mb-2">
+          <Target size={18} />
+          <h3>Daily Goal Progress</h3>
+        </div>
 
         <form onSubmit={handleGoalUpdate} className="mb-4 flex items-center gap-2 text-sm">
           <label htmlFor="goal">Set Goal:</label>
@@ -119,12 +175,14 @@ export default function Dashboard() {
             defaultValue={dailyGoal}
             className="border rounded px-2 py-1 w-20"
           />
-          <button
-            type="submit"
-            className="bg-[var(--chrono-primary)] text-white px-3 py-1 rounded text-sm hover:bg-[#e69e18]"
-          >
-            Update
-          </button>
+          <motion.button
+  type="submit"
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  className="ml-1 bg-[var(--chrono-primary)] text-white px-3 py-1 rounded text-sm shadow-sm hover:bg-[#e69e18] transition-all duration-300"
+>
+  Update
+</motion.button>
           {goalMessage && (
             <span className="text-green-600 text-xs">{goalMessage}</span>
           )}
@@ -143,10 +201,13 @@ export default function Dashboard() {
         </p>
       </div>
 
-      {/* 📅 Session History with Filter */}
-      <div className="bg-white rounded shadow p-4">
+      {/* Session History */}
+      <div className={`bg-[#f5f5f5] rounded-xl shadow-md p-5 border border-neutral-200 mb-6 ${glow}`}>
         <div className="flex justify-between items-center mb-2">
-          <h3 className="text-md font-bold text-gray-600">Session History</h3>
+          <div className="flex items-center gap-2 text-md font-bold text-gray-600">
+            <BarChart3 size={18} />
+            <h3>Session History</h3>
+          </div>
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
@@ -174,35 +235,61 @@ export default function Dashboard() {
         </ul>
       </div>
 
-      {/* 📊 Heatmap Calendar */}
       <StreakChart />
 
-      {/* 🧹 Clear + Export Buttons */}
-      <div className="mt-6 flex gap-4 flex-wrap">
-        <button
-          onClick={() => {
-            localStorage.removeItem("codechrono-logs");
-            window.location.reload();
-          }}
-          className="text-sm text-red-600 hover:text-red-800 underline"
-        >
-          Clear All Data
-        </button>
+      <BadgesPanel
+        totalMinutes={weeklyTotal + monthlyTotal - todayTotal}
+        streak={streak}
+      />
 
-        <button
-          onClick={exportLogsAsJSON}
-          className="text-sm text-blue-600 hover:text-blue-800 underline"
-        >
-          Export JSON
-        </button>
+      <motion.div
+  className="mt-8 flex justify-center flex-wrap gap-4 mb-4"
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+>
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={() => {
+      localStorage.removeItem("codechrono-logs");
+      window.location.reload();
+    }}
+    className="flex items-center gap-2 text-sm text-red-600 hover:text-red-800"
+  >
+    <Trash2 size={16} />
+    Clear All Data
+  </motion.button>
 
-        <button
-          onClick={exportLogsAsCSV}
-          className="text-sm text-blue-600 hover:text-blue-800 underline"
-        >
-          Export CSV
-        </button>
-      </div>
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={exportLogsAsJSON}
+    className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"
+  >
+    <FileDown size={16} />
+    Export JSON
+  </motion.button>
+
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={exportLogsAsCSV}
+    className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"
+  >
+    <FileDown size={16} />
+    Export CSV
+  </motion.button>
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={exportNotesAsJSON}
+    className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"
+  >
+    <FileDown size={16} />
+    Export Notes
+  </motion.button>
+</motion.div>
     </div>
   );
 }

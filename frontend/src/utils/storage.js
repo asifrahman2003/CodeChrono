@@ -1,10 +1,10 @@
 import { getTodayDate } from "./time";
 
-// 🔑 LocalStorage Keys
+// LocalStorage Keys
 const STORAGE_KEY = "codechrono-logs";
 const GOAL_KEY = "codechrono-daily-goal";
 
-// 🔐 Save session
+// Save session
 export function saveSession(date, durationMs) {
   const existing = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
   const minutes = Math.round(durationMs / 60000);
@@ -13,19 +13,19 @@ export function saveSession(date, durationMs) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
 }
 
-// 🔍 Get today's total
+// Get today's total
 export function getTodayTotal(date) {
   const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
   const todayLogs = data[date] || [];
   return todayLogs.reduce((a, b) => a + b, 0);
 }
 
-// 📦 Get all logs
+// Get all logs
 export function getAllLogs() {
   return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 }
 
-// 🔥 Calculate coding streak (consecutive days)
+// Calculate coding streak (consecutive days)
 export function calculateStreak(logs) {
   const dates = Object.keys(logs).sort((a, b) => b.localeCompare(a)); // newest first
   let streak = 0;
@@ -45,7 +45,7 @@ export function calculateStreak(logs) {
   return streak;
 }
 
-// 🎯 Daily goal management
+// Daily goal management
 export function getDailyGoal() {
   return parseInt(localStorage.getItem(GOAL_KEY)) || 60; // default 60 mins
 }
@@ -54,7 +54,7 @@ export function setDailyGoal(minutes) {
   localStorage.setItem(GOAL_KEY, minutes);
 }
 
-// 📤 Export logs to JSON
+// Export logs to JSON
 export function exportLogsAsJSON() {
   const data = getAllLogs();
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
@@ -67,7 +67,7 @@ export function exportLogsAsJSON() {
   URL.revokeObjectURL(url);
 }
 
-// 📤 Export logs to CSV
+// Export logs to CSV
 export function exportLogsAsCSV() {
   const data = getAllLogs();
   const rows = [["Date", "Session #", "Minutes"]];
@@ -89,7 +89,7 @@ export function exportLogsAsCSV() {
   URL.revokeObjectURL(url);
 }
 
-// 📊 Weekly/Monthly Total Summary
+// Weekly/Monthly Total Summary
 export function getTotalInRange(logs, daysBack) {
   const now = new Date();
 
@@ -103,4 +103,60 @@ export function getTotalInRange(logs, daysBack) {
     .reduce((total, [, sessions]) => {
       return total + sessions.reduce((a, b) => a + b, 0);
     }, 0);
+}
+
+const BADGES_KEY = "codechrono-badges";
+
+// Save badge unlock
+export function unlockBadge(id) {
+  const current = getUnlockedBadges();
+  if (!current.some(b => b.id === id)) {
+    current.push({ id, unlockedAt: new Date().toISOString() });
+    localStorage.setItem(BADGES_KEY, JSON.stringify(current));
+  }
+}
+
+// Get all unlocked badges
+export function getUnlockedBadges() {
+  return JSON.parse(localStorage.getItem(BADGES_KEY)) || [];
+}
+
+const NOTES_KEY = "codechrono-notes";
+
+// Save today's session note
+export function saveNoteForToday(note) {
+  const today = getTodayDate();
+  const notes = JSON.parse(localStorage.getItem(NOTES_KEY)) || {};
+  notes[today] = note;
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+}
+
+// Get today's session note
+export function getNoteForToday() {
+  const today = getTodayDate();
+  const notes = JSON.parse(localStorage.getItem(NOTES_KEY)) || {};
+  return notes[today] || "";
+}
+
+// Clear today's session note
+export function clearNoteForToday() {
+  const today = getTodayDate();
+  const notes = JSON.parse(localStorage.getItem(NOTES_KEY)) || {};
+  delete notes[today];
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+}
+
+export function exportNotesAsJSON() {
+  const notes = JSON.parse(localStorage.getItem(NOTES_KEY)) || {};
+  const blob = new Blob([JSON.stringify(notes, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "codechrono_notes.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function getAllNotes() {
+  return JSON.parse(localStorage.getItem(NOTES_KEY)) || {};
 }

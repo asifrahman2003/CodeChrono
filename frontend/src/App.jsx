@@ -2,6 +2,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Timer from './components/Timer';
 import Dashboard from './components/Dashboard';
+import About from "./components/About";
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <main className="flex-grow flex flex-col items-center px-4 py-8">
         <Timer />
         <Dashboard />
+        <About />
       </main>
 
       <Footer />

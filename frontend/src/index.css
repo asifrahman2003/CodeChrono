@@ -56,3 +56,21 @@ button:hover {
 html {
   scroll-behavior: smooth;
 }
+
+/* Shrink text size for month/week labels */
+.react-heatmap text {
+  font-size: 10px;
+  fill: #999; /* softer gray if needed */
+}
+
+/* Shrink cell height and spacing */
+.react-calendar-heatmap .react-calendar-heatmap-week {
+  height: 12px !important; /* row height */
+}
+
+.react-calendar-heatmap rect {
+  rx: 2;
+  ry: 2;
+  width: 10px !important;
+  height: 10px !important;
+}
