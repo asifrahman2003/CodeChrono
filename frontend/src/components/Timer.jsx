@@ -38,7 +38,7 @@ export default function Timer() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h1 className="text-4xl font-extrabold text-[var(--chrono-secondary)] mb-4 tracking-tight">
+      <h1 className="text-5xl font-bold text-[var(--chrono-secondary)] mb-4 tracking-tight">
         CodeChrono
       </h1>
 

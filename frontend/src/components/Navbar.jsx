@@ -9,7 +9,7 @@ export default function Navbar() {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="w-full px-10 py-4 bg-white/60 backdrop-blur-sm shadow-sm border-b border-neutral-200 flex justify-between items-center sticky top-0 z-50"
+      className="w-full px-10 py-3 bg-white/60 backdrop-blur-sm shadow-sm border-b border-neutral-200 flex justify-between items-center sticky top-0 z-50"
     >
       <motion.div
   className="flex items-center gap-2.5"
