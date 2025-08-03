@@ -1,0 +1,58 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+:root {
+  --chrono-bg: #F7F7F7;
+  --chrono-primary: #FFB22C;
+  --chrono-secondary: #854836;
+  --chrono-text: #000000;
+  font-family: "Rubik", sans-serif;
+}
+
+body {
+  @apply m-0 min-h-screen text-[var(--chrono-text)] bg-[var(--chrono-bg)] overflow-x-hidden;
+  font-family: "Rubik", sans-serif;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-semibold text-[var(--chrono-text)];
+}
+
+button {
+  @apply rounded px-4 py-2 font-medium transition-colors duration-200;
+  background-color: var(--chrono-primary);
+  color: var(--chrono-text);
+}
+button:hover {
+  background-color: #e69e18; /* Slightly darker shade */
+}
+
+/* Calendar heatmap color scale */
+.color-empty {
+  fill: #eeeeee;
+}
+.color-scale-1 {
+  fill: #FFB22C33; /* light orange */
+}
+.color-scale-2 {
+  fill: #FFB22C77;
+}
+.color-scale-3 {
+  fill: #FFB22Caa;
+}
+.color-scale-4 {
+  fill: #FFB22C;
+}
+
+/* Optional: improve tooltip appearance */
+.__react_component_tooltip {
+  font-size: 0.75rem;
+  padding: 6px 10px;
+  background-color: #000;
+  border-radius: 4px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
