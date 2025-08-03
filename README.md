@@ -4,9 +4,9 @@ CodeChrono is a personal productivity app that helps me log my daily coding time
 
 ## Live Demo
 
-![alt text](<Screenshot 2025-08-02 at 11.44.25 PM.png>)
+![alt text](CodeChronoDemo.png)
 
-[https://code-chrono.vercel.app/](code-chrono.vercel.app/)
+[https://code-chrono.vercel.app/](https://code-chrono.vercel.app/)
 
 ---
 
