@@ -1,6 +1,6 @@
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Timer from './components/Timer';
+
 import Dashboard from './components/Dashboard';
 import About from "./components/About";
 import { Analytics } from "@vercel/analytics/react"
@@ -11,7 +11,6 @@ export default function App() {
       <Navbar />
 
       <main className="flex-grow flex flex-col items-center px-4 py-8">
-        <Timer />
         <Dashboard />
         <About />
       </main>

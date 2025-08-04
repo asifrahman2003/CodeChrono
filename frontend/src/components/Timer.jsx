@@ -3,12 +3,12 @@ import { formatDuration, getTodayDate } from "../utils/time";
 import { saveSession } from "../utils/storage";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function Timer() {
+export default function Timer({ onSessionComplete }) {
   const [isRunning, setIsRunning] = useState(false);
   const [startTime, setStartTime] = useState(null);
   const [elapsed, setElapsed] = useState(0);
 
-  // Timer tick effect
+  // Update elapsed time every second when timer is running
   useEffect(() => {
     let interval;
     if (isRunning) {
@@ -19,16 +19,23 @@ export default function Timer() {
     return () => clearInterval(interval);
   }, [isRunning, startTime]);
 
+  // Start timer
   const handleStart = () => {
     setIsRunning(true);
     setStartTime(Date.now());
   };
 
+  // Stop timer and save session
   const handleStop = () => {
     setIsRunning(false);
     saveSession(getTodayDate(), elapsed);
     setElapsed(0);
     setStartTime(null);
+
+    // Trigger Dashboard state refresh
+    if (typeof onSessionComplete === "function") {
+      onSessionComplete();
+    }
   };
 
   return (
@@ -46,6 +53,7 @@ export default function Timer() {
         Track your daily coding time and build the habit of consistency.
       </p>
 
+      {/* Animated pulse ring when running */}
       <div className="relative mb-8">
         <AnimatePresence>
           {isRunning && (
@@ -63,6 +71,7 @@ export default function Timer() {
           )}
         </AnimatePresence>
 
+        {/* Timer display */}
         <motion.div
           className="relative z-10 text-5xl font-mono text-[var(--chrono-text)]"
           animate={{ scale: isRunning ? 1.1 : 1 }}
@@ -72,6 +81,7 @@ export default function Timer() {
         </motion.div>
       </div>
 
+      {/* Start/Stop button */}
       <motion.button
         onClick={isRunning ? handleStop : handleStart}
         whileHover={{ scale: 1.05 }}

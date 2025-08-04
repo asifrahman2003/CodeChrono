@@ -22,12 +22,14 @@ import {
   Flame,
   CalendarDays,
   CalendarCheck,
-  Timer,
+  Timer as TimerIcon,
   Target,
   BarChart3,
   Trash2,
   FileDown,
 } from "lucide-react";
+
+import Timer from './Timer';
 
 export default function Dashboard() {
   const [todayTotal, setTodayTotal] = useState(0);
@@ -88,6 +90,18 @@ export default function Dashboard() {
 
   return (
     <div className="w-full max-w-4xl mx-auto mt-10 px-4">
+      {/* Timer */}
+      <Timer
+  onSessionComplete={() => {
+    const date = getTodayDate();
+    const updatedLogs = getAllLogs();
+    setTodayTotal(getTodayTotal(date));
+    setLogs(updatedLogs);
+    setStreak(calculateStreak(updatedLogs));
+    setWeeklyTotal(getTotalInRange(updatedLogs, 7));
+    setMonthlyTotal(getTotalInRange(updatedLogs, 30));
+  }}
+/>
       {/* Motivation */}
       <motion.div
         className={`bg-[#fff6e6] rounded-xl shadow-md p-5 border border-[var(--chrono-primary)] mb-6 ${glow}`}
@@ -97,7 +111,7 @@ export default function Dashboard() {
       >
         <div className="flex items-center gap-2 mb-2 text-[var(--chrono-secondary)]">
           <Quote size={18} />
-          <h3 className="text-md font-bold">Daily Motivation</h3>
+          <h3 className="text-md font-bold">Daily Quote</h3>
         </div>
         <blockquote className="italic text-[var(--chrono-secondary)] leading-relaxed">
           “{quoteOfTheDay.text}”
@@ -106,6 +120,7 @@ export default function Dashboard() {
           </footer>
         </blockquote>
       </motion.div>
+      
 
 <SessionNotes />
 
@@ -150,7 +165,7 @@ export default function Dashboard() {
       {/* Today's Total */}
       <div className={`bg-[#fffbe9] rounded-xl shadow-md p-5 border border-neutral-200 mb-6 ${glow}`}>
         <div className="flex items-center gap-2 text-lg font-medium mb-1">
-          <Timer size={18} />
+          <TimerIcon size={18} />
           <span>
             Today:{" "}
             <span className="text-[var(--chrono-primary)]">{todayTotal} minutes</span>
