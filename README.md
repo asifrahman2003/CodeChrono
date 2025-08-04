@@ -65,10 +65,12 @@ frontend/
 - Browser extension integration
 
 ## Author
-```Asifur Rahman
+```
+Asifur Rahman
 - Portfolio: https://www.iamasiff.com
 - LinkedIn: https://linkedin.com/in/iamasiff
-- GitHub: https://github.com/asifrahman2003```
+- GitHub: https://github.com/asifrahman2003
+```
 
 ## License
-This project is licensed under the MIT License.
+This project is licensed under the MIT License. 
