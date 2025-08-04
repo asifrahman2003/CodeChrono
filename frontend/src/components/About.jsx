@@ -27,19 +27,25 @@ export default function AboutSection() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex justify-center items-center gap-2 mb-2 text-[var(--chrono-primary)]">
+      <div className="flex justify-center items-center gap-2 mb-2 text-[var(--chrono-primary)] mt-2">
         <Info size={18} />
-        <h3 className="text-md font-bold">About CodeChrono</h3>
+        <h3 className="text-lg font-bold">About CodeChrono</h3>
       </div>
 
       <p className="text-sm leading-relaxed text-gray-700 px-4">
-        <strong>CodeChrono</strong> is my personal coding time logger that helps me build habits,
-        visualize progress, and stay motivated for my coding journey. Whether I am grinding LeetCode, learning a new
-        tech stack, or building consistently, CodeChrono helps track my daily coding minutes, unlock badges,
-        and celebrate streaks because <strong>consistency builds mastery</strong>.
-      </p>
+  <strong>CodeChrono</strong> is your personal coding time logger that helps you build habits,
+  visualize progress, and stay motivated on your coding journey. Whether you're grinding LeetCode, learning a new
+  tech stack, or building consistently, CodeChrono tracks your daily coding minutes, unlocks badges,
+  and celebrates streaks, because we strongly <strong>consistency builds mastery</strong>.
+  <br /><br />
+  Your progress is currently saved privately in your browser using <strong>localStorage</strong>, so your data stays safe
+  on your device and loads instantly, <br /><strong>no login is required</strong>. In the future, we plan to add
+  <strong> user accounts</strong>, so your data can sync across devices seamlessly.
+  <br /><br />
+  Thank you for using <strong>CodeChrono</strong>. Keep grinding and stay committed to your personal goals! 
+</p>
 
-      <div className="mt-4 flex justify-center gap-6">
+      <div className="mt-6 flex justify-center gap-6 mb-2">
         {iconLinks.map(({ icon: Icon, href, label }, i) => (
           <motion.a
             key={label}

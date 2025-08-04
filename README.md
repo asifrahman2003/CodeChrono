@@ -1,6 +1,6 @@
-# CodeChrono – My Daily Coding Session Logger
+# CodeChrono – Your Daily Coding Session Logger
 
-CodeChrono is a personal productivity app that helps me log my daily coding time, track progress, and stay consistent. It's designed for developers who want to build strong habits, stay motivated, and visualize their growth over time.
+CodeChrono is a personal productivity app that helps you log your daily coding time, track progress, and stay consistent. It's designed for developers who want to build strong habits, stay motivated, and visualize their growth over time.
 
 ## Live Demo
 
@@ -65,10 +65,10 @@ frontend/
 - Browser extension integration
 
 ## Author
-Asifur Rahman
+```Asifur Rahman
 - Portfolio: https://www.iamasiff.com
 - LinkedIn: https://linkedin.com/in/iamasiff
-- GitHub: https://github.com/asifrahman2003
+- GitHub: https://github.com/asifrahman2003```
 
 ## License
 This project is licensed under the MIT License.

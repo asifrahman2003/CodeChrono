@@ -104,7 +104,7 @@ export default function Dashboard() {
 />
       {/* Motivation */}
       <motion.div
-        className={`bg-[#fff6e6] rounded-xl shadow-md p-5 border border-[var(--chrono-primary)] mb-6 ${glow}`}
+        className={`bg-[#fff6e6] rounded-xl shadow-md p-5 border border-[var(--chrono-primary)] mb-6 ${glow} mt-16`}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
