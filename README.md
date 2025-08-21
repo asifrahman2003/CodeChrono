@@ -45,10 +45,10 @@ git clone https://github.com/asifrahman2003/CodeChrono
 cd frontend
 npm install
 npm run dev
-Project Structure
-less
-Copy
-Edit
+```
+
+## Project Structure
+```
 frontend/
 ├── components/         // Reusable UI components
 ├── utils/              // LocalStorage helpers and date utilities
